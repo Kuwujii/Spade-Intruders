@@ -2,10 +2,6 @@ package spadeintruders;
 
 public class SpadeIntruders {
     public static void main(String[] args) {
-        Launcher();
-    }
-
-    public static Klatka Launcher() {
-        return new Klatka(1280, 720);
+        new Thread(new PetlaGry(new Gra(1280, 720))).start();; //Tworzenie wątku obsługującego całą gre
     }
 }
