@@ -19,6 +19,10 @@ public abstract class Obiekt { //Abstrakcyjna klasa obiektu w grze
         return this.rozmiar;
     }
 
+    public boolean czyPocisk() {
+        return false;
+    }
+
     public abstract void aktualizuj(); //Abstrakcyjne klasy tego obiektu
     public abstract Image getTekstura();
 }

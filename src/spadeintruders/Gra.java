@@ -7,17 +7,37 @@ public class Gra { //Klasa odpowiedzialna za przechowywanie informacji o naszej 
     private Klatka klatka;
     private List<Obiekt> obiekty;
     private Wejscie wejscie;
+    private Gracz gracz;
+
+    public Rozmiar rozmiarOkna;
 
     public Gra(int szerokosc, int wysokosc) {
         this.wejscie = new Wejscie();
-        this.klatka = new Klatka(szerokosc, wysokosc, this.wejscie);
+        this.rozmiarOkna = new Rozmiar(szerokosc, wysokosc);
+        this.klatka = new Klatka(this.rozmiarOkna, this.wejscie);
 
         this.obiekty = new ArrayList<>();
-        this.obiekty.add(new Gracz((szerokosc/2-25), (wysokosc*7/8)-25, 50, 50, new KontrolerGracza(this.wejscie))); //Dodaemy obiekt gracza do listy istniejących obiektów
+        this.gracz = new Gracz((szerokosc/2-25), (wysokosc*7/8)-25, 50, 50, new KontrolerGracza(this.wejscie));
+        this.obiekty.add(this.gracz); //Dodaemy obiekt gracza do listy istniejących obiektów
     }
 
     public void aktualizuj() {
-        this.obiekty.forEach(obiekt -> obiekt.aktualizuj()); //Dla każdego obiektu w grze, zaktualizuj go
+        List<Obiekt> obiektyDoUsuniecia = new ArrayList<>();
+
+        this.gracz.noweObiekty.forEach(obiekt -> this.obiekty.add(obiekt));
+        this.gracz.noweObiekty.clear();
+
+        this.obiekty.forEach(obiekt -> {
+            if(obiekt.czyPocisk() && obiekt.pozycja.getY()+obiekt.rozmiar.getWysokosc() <= 0) {
+                obiektyDoUsuniecia.add(obiekt);
+                obiekt = null;
+            } else {
+                obiekt.aktualizuj();
+            }
+        }); //Dla każdego obiektu w grze, zaktualizuj go
+
+        this.obiekty.removeAll(obiektyDoUsuniecia);
+        obiektyDoUsuniecia.clear();
     }
 
     public void rysuj() {
