@@ -32,11 +32,11 @@ public class Gracz extends Obiekt { //Klasa przeznaczona do tworzenia obiektu gr
         }
 
         if(this.kontroler.czyStrzela() && System.currentTimeMillis() >= this.czasOstatniegoStrzalu+100) {
-            this.noweObiekty.add(new Pocisk(this.pozycja.getX()+(this.rozmiar.getSzerokosc()/2)-5, this.pozycja.getY()));
+            this.noweObiekty.add(new Pocisk(this.pozycja.getX()+(this.rozmiar.getSzerokosc()/2)-(Stale.szerokoscPocisku/2), this.pozycja.getY()-Stale.wysokoscPocisku));
             this.czasOstatniegoStrzalu = System.currentTimeMillis();
         }
 
-        if(this.pozycja.getX()+roznicaX >= 0 && this.pozycja.getX()+this.rozmiar.getSzerokosc()+roznicaX <= 1280) {
+        if(this.pozycja.getX()+roznicaX >= 0 && this.pozycja.getX()+this.rozmiar.getSzerokosc()+roznicaX <= Stale.szerokoscEkranu) {
             this.pozycja = new Pozycja(this.pozycja.getX()+roznicaX, this.pozycja.getY());
         }
     }

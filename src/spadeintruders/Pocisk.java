@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 public class Pocisk extends Obiekt {
     public Pocisk(int x, int y) {
-        super(x, y, 10, 25);
+        super(x, y, Stale.szerokoscPocisku, Stale.wysokoscPocisku);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class Pocisk extends Obiekt {
         BufferedImage tekstura = new BufferedImage(this.rozmiar.getSzerokosc(), this.rozmiar.getWysokosc(), BufferedImage.TYPE_INT_RGB); //Tworzenie tekstury obiektu
         Graphics2D grafika = tekstura.createGraphics();
 
-        grafika.setColor(Color.decode("#ff0000"));
+        grafika.setColor(Color.decode("#00ff00"));
         grafika.fillRect(0, 0, this.rozmiar.getSzerokosc(), this.rozmiar.getWysokosc());
 
         grafika.dispose();

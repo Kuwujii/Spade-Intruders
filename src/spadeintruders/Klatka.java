@@ -10,12 +10,12 @@ import java.awt.image.BufferStrategy;
 public class Klatka extends JFrame { //Klasa odpowiedzialna za rysowanie klatek w oknie gry
     private Canvas plotno; //Płótno na którym rysować będziemy klatki
 
-    public Klatka(Rozmiar rozmiarOkna, Wejscie wejscie) {
+    public Klatka(int szerokosc, int wysokosc, Wejscie wejscie) {
         setTitle("Spade Intruders");
         setDefaultCloseOperation(EXIT_ON_CLOSE); //Ustawiamy żeby program zakonczył się po kliknięciu X w rogu (domyślnie zamyka się okno ale program dalej działa w tle)
 
         this.plotno = new Canvas(); //Tworzymy płótno i ustawiamy jego rozmiary
-        this.plotno.setPreferredSize(new Dimension(rozmiarOkna.getSzerokosc(), rozmiarOkna.getWysokosc()));
+        this.plotno.setPreferredSize(new Dimension(szerokosc, wysokosc));
         this.plotno.setFocusable(false);
 
         add(this.plotno); //Dodajemy płótno do okna
