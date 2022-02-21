@@ -7,14 +7,7 @@ import java.awt.image.BufferedImage;
 
 public class Wrog extends Obiekt {
     private KontrolerRoju kontroler;
-    private boolean pierwszy = false, ostatni = false;
-    private Obiekt poprzedni;
-
-    public Wrog(int x, int y, int szerokosc, int wysokosc, KontrolerRoju kontroler, Obiekt poprzedni) {
-        super(x, y, szerokosc, wysokosc);
-        this.kontroler = kontroler;
-        this.poprzedni = poprzedni;
-    }
+    private boolean pierwszy, pomin = true;
 
     public Wrog(int x, int y, int szerokosc, int wysokosc, KontrolerRoju kontroler, boolean pierwszy) {
         super(x, y, szerokosc, wysokosc);
@@ -22,14 +15,19 @@ public class Wrog extends Obiekt {
         this.pierwszy = pierwszy;
     }
 
-    public Wrog(int x, int y, int szerokosc, int wysokosc, KontrolerRoju kontroler, Obiekt poprzedni, boolean ostatni) {
+    public Wrog(int x, int y, int szerokosc, int wysokosc, KontrolerRoju kontroler) {
         super(x, y, szerokosc, wysokosc);
         this.kontroler = kontroler;
-        this.poprzedni = poprzedni;
-        this.ostatni = ostatni;
+        this.pierwszy = false;
     }
 
     public void aktualizujRoj() {
+        if(this.kontroler.czyProsiWDol() && this.pierwszy && !this.pomin) {
+            this.kontroler.zmienKierunekY();
+        } else if(this.kontroler.czyProsiWDol() && this.pierwszy && this.pomin) {
+            this.pomin = !this.pomin;
+        }
+
         if((this.pozycja.getX() == 0 && this.kontroler.czyProsiWLewo())
         || (this.pozycja.getX()+Stale.rozmiarPostaci == Stale.szerokoscEkranu && this.kontroler.czyProsiWPrawo())) {
             this.kontroler.zmienKierunekX();
@@ -41,15 +39,15 @@ public class Wrog extends Obiekt {
     public void aktualizuj() {
         int roznicaX = 0, roznicaY = 0;
 
-        if(this.kontroler.czyProsiWLewo()) {
-            roznicaX -= 1;
-        }
-        if(this.kontroler.czyProsiWPrawo()) {
-            roznicaX += 1;
-        }
-
         if(this.kontroler.czyProsiWDol()) {
             roznicaY += 1;
+        } else {
+            if(this.kontroler.czyProsiWLewo()) {
+                roznicaX -= 1;
+            }
+            if(this.kontroler.czyProsiWPrawo()) {
+                roznicaX += 1;
+            }
         }
 
         if(this.pozycja.getX() >= 0 && this.pozycja.getX()+this.rozmiar.getSzerokosc() <= Stale.szerokoscEkranu) {
@@ -75,13 +73,5 @@ public class Wrog extends Obiekt {
 
     public void jestPierwszy() {
         this.pierwszy = true;
-    }
-
-    public void jestOstatni() {
-        this.ostatni = true;
-    }
-
-    public void ustawPoprzednika(Wrog poprzedni) {
-        this.poprzedni = poprzedni;
     }
 }

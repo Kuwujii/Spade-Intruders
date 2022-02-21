@@ -33,18 +33,7 @@ public class Gra { //Klasa odpowiedzialna za przechowywanie informacji o naszej 
                     Wrog tymczas = new Wrog(
                         i, ((3*Stale.rozmiarPostaci)/2)+10+(j*(Stale.rozmiarPostaci+10)),
                         Stale.rozmiarPostaci, Stale.rozmiarPostaci,
-                        kontrolerRoju,
-                        true
-                    );
-
-                    this.obiekty.add(tymczas);
-                    this.roj.add(tymczas);
-                } else if(j == 4 && i == Stale.szerokoscEkranu-Stale.rozmiarPostaci-25) {
-                    Wrog tymczas = new Wrog(
-                        i, ((3*Stale.rozmiarPostaci)/2)+10+(j*(Stale.rozmiarPostaci+10)),
-                        Stale.rozmiarPostaci, Stale.rozmiarPostaci,
-                        kontrolerRoju, this.obiekty.get(this.obiekty.size()-1),
-                        true
+                        kontrolerRoju, true
                     );
 
                     this.obiekty.add(tymczas);
@@ -53,7 +42,7 @@ public class Gra { //Klasa odpowiedzialna za przechowywanie informacji o naszej 
                     Wrog tymczas = new Wrog(
                         i, ((3*Stale.rozmiarPostaci)/2)+10+(j*(Stale.rozmiarPostaci+10)),
                         Stale.rozmiarPostaci, Stale.rozmiarPostaci,
-                        kontrolerRoju, this.obiekty.get(this.obiekty.size()-1)
+                        kontrolerRoju
                     );
 
                     this.obiekty.add(tymczas);
