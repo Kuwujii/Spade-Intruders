@@ -1,12 +1,12 @@
 package spadeintruders;
 
 public class KontrolerRoju implements Kontroler {
-    private boolean czyPrawo;
-    private boolean czyDol;
+    private boolean czyPrawo, czyDol, czyStrzal;
 
     public KontrolerRoju() {
         this.czyPrawo = true;
         this.czyDol = false;
+        this.czyStrzal = false;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class KontrolerRoju implements Kontroler {
 
     @Override
     public boolean czyStrzela() {
-        return false;
+        return this.czyStrzal;
     }
 
     public boolean czyProsiWDol() {
@@ -34,5 +34,9 @@ public class KontrolerRoju implements Kontroler {
 
     public void zmienKierunekY() {
         this.czyDol = !this.czyDol;
+    }
+
+    public void zmienPozwolenieNaStrzal() {
+        this.czyStrzal = !this.czyStrzal;
     }
 }

@@ -58,12 +58,39 @@ public class Gra { //Klasa odpowiedzialna za przechowywanie informacji o naszej 
         this.gracz.noweObiekty.forEach(obiekt -> this.obiekty.add(obiekt));
         this.gracz.noweObiekty.clear();
 
-        this.roj.forEach(wrog -> wrog.aktualizujRoj());
+        this.roj.forEach(wrog -> {
+            wrog.aktualizujRoj();
+
+            if(wrog.nowyPocisk != null) {
+                this.obiekty.add(wrog.nowyPocisk);
+                wrog.nowyPocisk = null;
+            }
+        });
 
         this.obiekty.forEach(obiekt -> {
-            if(obiekt.czyPocisk() && obiekt.pozycja.getY()+obiekt.rozmiar.getWysokosc() <= 0) {
-                obiektyDoUsuniecia.add(obiekt);
-                obiekt = null;
+            if(obiekt.czyPocisk()) {
+                if(obiekt.pozycja.getY()+obiekt.rozmiar.getWysokosc() <= 0 || obiekt.pozycja.getY() >= Stale.wysokoscEkranu) {
+                    obiektyDoUsuniecia.add(obiekt);
+                    obiekt = null;
+                } else {
+                    Obiekt trafiony = null;
+
+                    if(((Pocisk)obiekt).czyWrogi()) {
+                        trafiony = ((Pocisk)obiekt).aktualizuj(this.gracz);
+                    } else {
+                        trafiony = ((Pocisk)obiekt).aktualizuj(this.roj);
+                    }
+
+                    if(trafiony != null) {
+                        if(trafiony != this.gracz && ((Wrog)trafiony).czyJestPierwszy() && this.roj.size() > 1) {
+                            this.roj.get(this.roj.indexOf(trafiony)+1).jestPierwszy();
+                        }
+
+                        obiektyDoUsuniecia.add(trafiony);
+                        obiektyDoUsuniecia.add(obiekt);
+                        trafiony = null;
+                    }
+                }
             } else {
                 obiekt.aktualizuj();
             }

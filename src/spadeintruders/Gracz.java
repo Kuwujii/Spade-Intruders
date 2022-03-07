@@ -32,7 +32,7 @@ public class Gracz extends Obiekt { //Klasa przeznaczona do tworzenia obiektu gr
         }
 
         if(this.kontroler.czyStrzela() && System.currentTimeMillis() >= this.czasOstatniegoStrzalu+100) {
-            this.noweObiekty.add(new Pocisk(this.pozycja.getX()+(this.rozmiar.getSzerokosc()/2)-(Stale.szerokoscPocisku/2), this.pozycja.getY()-Stale.wysokoscPocisku));
+            this.noweObiekty.add(new Pocisk(this.pozycja.getX()+(this.rozmiar.getSzerokosc()/2)-(Stale.szerokoscPocisku/2), this.pozycja.getY()-Stale.wysokoscPocisku, false));
             this.czasOstatniegoStrzalu = System.currentTimeMillis();
         }
 
@@ -46,7 +46,7 @@ public class Gracz extends Obiekt { //Klasa przeznaczona do tworzenia obiektu gr
         BufferedImage tekstura = new BufferedImage(this.rozmiar.getSzerokosc(), this.rozmiar.getWysokosc(), BufferedImage.TYPE_INT_RGB); //Tworzenie tekstury obiektu
         Graphics2D grafika = tekstura.createGraphics();
 
-        grafika.setColor(Color.decode("#ffffff"));
+        grafika.setColor(Color.decode("#ffff00"));
         grafika.fillRect(0, 0, this.rozmiar.getSzerokosc(), this.rozmiar.getWysokosc());
 
         grafika.dispose();
