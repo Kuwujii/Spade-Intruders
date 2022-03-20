@@ -28,7 +28,7 @@ public class Klatka extends JFrame { //Klasa odpowiedzialna za rysowanie klatek 
         setVisible(true);
     }
 
-    public void rysuj(Gra gra) {
+    public void rysuj(Gra gra, int fps, int ups) {
         BufferStrategy rysowaneKlatki = this.plotno.getBufferStrategy();
         Graphics grafika = rysowaneKlatki.getDrawGraphics();
 
@@ -36,6 +36,11 @@ public class Klatka extends JFrame { //Klasa odpowiedzialna za rysowanie klatek 
         grafika.fillRect(0, 0, this.plotno.getWidth(), this.plotno.getHeight());
 
         gra.getObiekty().forEach(obiekt -> grafika.drawImage(obiekt.getTekstura(), obiekt.getPozycja().getX(), obiekt.getPozycja().getY(), null)); //Rysujemy wszystkie obiekty
+
+        grafika.setFont(grafika.getFont().deriveFont(1));
+        grafika.setColor(Color.decode("#ffffff"));
+        grafika.drawString("FPS: "+fps, 10, 10);
+        grafika.drawString("UPS: "+ups, 10, 20);
 
         grafika.dispose(); //Zwalniamy zasoby które zajmowały się rysowaniem ukończonych klatek
         rysowaneKlatki.show(); //Pokazujemy klatke

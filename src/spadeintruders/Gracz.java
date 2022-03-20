@@ -53,4 +53,7 @@ public class Gracz extends Obiekt { //Klasa przeznaczona do tworzenia obiektu gr
         return tekstura;
     }
     
+    public boolean restart() {
+        return  ((KontrolerGracza)this.kontroler).restart();
+    }
 }

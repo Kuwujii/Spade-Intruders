@@ -19,7 +19,12 @@ public class KontrolerGracza implements Kontroler {
         return this.wejscie.czyWcisniete(KeyEvent.VK_D);
     }
 
+    @Override
     public boolean czyStrzela() {
         return this.wejscie.czyWcisniete(KeyEvent.VK_SPACE);
+    }
+
+    public boolean restart() {
+        return this.wejscie.czyWcisniete(KeyEvent.VK_R);
     }
 }

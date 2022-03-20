@@ -2,11 +2,14 @@ package spadeintruders;
 
 public class KontrolerRoju implements Kontroler {
     private boolean czyPrawo, czyDol, czyStrzal;
+    
+    public double predkoscRuchu;
 
     public KontrolerRoju() {
         this.czyPrawo = true;
         this.czyDol = false;
         this.czyStrzal = false;
+        this.predkoscRuchu = 1;
     }
 
     @Override

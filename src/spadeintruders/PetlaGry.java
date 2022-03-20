@@ -21,6 +21,11 @@ public class PetlaGry implements Runnable { //Klasa odpowiedzialna za główną 
         czasNastępnychStatystyk = System.currentTimeMillis()+1000;
 
         while(dziala) { //Nasza pętla gry
+            if(this.gra.restart()) {
+                this.gra.czysc();
+                this.gra = new Gra(Stale.szerokoscEkranu, Stale.wysokoscEkranu);
+            }
+
             czas = System.currentTimeMillis();
             double czasOstatniegoRysowania = (czas-czasOstatniejAktualizacji)/1000.0d;
             akumulator += czasOstatniegoRysowania;
@@ -32,7 +37,7 @@ public class PetlaGry implements Runnable { //Klasa odpowiedzialna za główną 
             }
 
             this.rysuj();
-            this.wypiszStatystyki();
+            this.statystyki();
         }
     }
 
@@ -46,9 +51,9 @@ public class PetlaGry implements Runnable { //Klasa odpowiedzialna za główną 
         this.fps++;
     }
 
-    private void wypiszStatystyki() {
+    private void statystyki() {
         if(System.currentTimeMillis() > this.czasNastępnychStatystyk) {
-            System.out.println("FPS: "+this.fps+", UPS: "+this.ups);
+            this.gra.statystyki(fps, ups);
             fps = 0;
             ups = 0;
             czasNastępnychStatystyk = System.currentTimeMillis()+1000;

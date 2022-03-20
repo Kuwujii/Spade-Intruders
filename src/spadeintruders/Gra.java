@@ -9,6 +9,7 @@ public class Gra { //Klasa odpowiedzialna za przechowywanie informacji o naszej 
     private List<Wrog> roj;
     private Wejscie wejscie;
     private Gracz gracz;
+    private int fps, ups;
 
     public Gra(int szerokosc, int wysokosc) {
         this.wejscie = new Wejscie();
@@ -54,12 +55,13 @@ public class Gra { //Klasa odpowiedzialna za przechowywanie informacji o naszej 
 
     public void aktualizuj() {
         List<Obiekt> obiektyDoUsuniecia = new ArrayList<>();
+        List<Obiekt> ekranKonca = new ArrayList<>();
 
         this.gracz.noweObiekty.forEach(obiekt -> this.obiekty.add(obiekt));
         this.gracz.noweObiekty.clear();
 
         this.roj.forEach(wrog -> {
-            wrog.aktualizujRoj();
+            wrog.aktualizujRoj(this.gracz, ekranKonca);
 
             if(wrog.nowyPocisk != null) {
                 this.obiekty.add(wrog.nowyPocisk);
@@ -82,8 +84,16 @@ public class Gra { //Klasa odpowiedzialna za przechowywanie informacji o naszej 
                     }
 
                     if(trafiony != null) {
-                        if(trafiony != this.gracz && ((Wrog)trafiony).czyJestPierwszy() && this.roj.size() > 1) {
-                            this.roj.get(this.roj.indexOf(trafiony)+1).jestPierwszy();
+                        if(trafiony != this.gracz) {
+                            ((Wrog)trafiony).informujOZgonie();
+
+                            if(((Wrog)trafiony).czyJestPierwszy() && this.roj.size() > 1) {
+                                this.roj.get(this.roj.indexOf(trafiony)+1).jestPierwszy();
+                            } else if(this.roj.size() == 1){
+                                ekranKonca.add(new EkranKoncaGry(true));
+                            }
+                        } else {
+                            ekranKonca.add(new EkranKoncaGry(false));
                         }
 
                         obiektyDoUsuniecia.add(trafiony);
@@ -96,16 +106,35 @@ public class Gra { //Klasa odpowiedzialna za przechowywanie informacji o naszej 
             }
         }); //Dla każdego obiektu w grze, zaktualizuj go
 
+        if(ekranKonca.size() > 0) {
+            this.obiekty.clear();
+            this.obiekty.add(ekranKonca.get(0));
+        }
+
         this.obiekty.removeAll(obiektyDoUsuniecia);
         this.roj.removeAll(obiektyDoUsuniecia);
         obiektyDoUsuniecia.clear();
     }
 
     public void rysuj() {
-        this.klatka.rysuj(this); //Rysuj naszą grę
+        this.klatka.rysuj(this, this.fps, this.ups); //Rysuj naszą grę
     }
 
     public List<Obiekt> getObiekty() {
         return this.obiekty;
+    }
+
+    public boolean restart() {
+        return gracz.restart();
+    }
+
+    public void czysc() {
+        this.klatka.setVisible(false);
+        this.klatka.dispose();
+    }
+
+    public void statystyki(int fps, int ups) {
+        this.fps = fps;
+        this.ups = ups;
     }
 }

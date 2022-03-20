@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 public class Wrog extends Obiekt {
     private KontrolerRoju kontroler;
@@ -25,53 +26,75 @@ public class Wrog extends Obiekt {
         this.pierwszy = false;
     }
 
-    public void aktualizujRoj() {
-        if(this.pierwszy) {
-            if(!this.kontroler.czyStrzela() && Math.random() > 0.99) {
-                this.kontroler.zmienPozwolenieNaStrzal();
+    public void aktualizujRoj(Gracz gracz, List<Obiekt> noweObiekty) {
+        if(this.pozycja.getY()+this.rozmiar.getWysokosc() >= gracz.pozycja.getY()) {
+            noweObiekty.add(new EkranKoncaGry(false));
+        } else {
+            if(this.pierwszy) {
+                if(!this.kontroler.czyStrzela() && Math.random() > 0.99) {
+                    this.kontroler.zmienPozwolenieNaStrzal();
+                }
+
+                if(this.kontroler.czyProsiWDol() && !this.pomin) {
+                    this.kontroler.zmienKierunekY();
+                } else if(this.kontroler.czyProsiWDol() && this.pomin) {
+                    this.pomin = !this.pomin;
+                }
             }
 
-            if(this.kontroler.czyProsiWDol() && !this.pomin) {
+            if((this.pozycja.getX() == 0 && this.kontroler.czyProsiWLewo())
+            || (this.pozycja.getX()+Stale.rozmiarPostaci == Stale.szerokoscEkranu && this.kontroler.czyProsiWPrawo())) {
+                this.kontroler.zmienKierunekX();
                 this.kontroler.zmienKierunekY();
-            } else if(this.kontroler.czyProsiWDol() && this.pomin) {
-                this.pomin = !this.pomin;
             }
-        }
-
-        if((this.pozycja.getX() == 0 && this.kontroler.czyProsiWLewo())
-        || (this.pozycja.getX()+Stale.rozmiarPostaci == Stale.szerokoscEkranu && this.kontroler.czyProsiWPrawo())) {
-            this.kontroler.zmienKierunekX();
-            this.kontroler.zmienKierunekY();
         }
     }
 
     @Override
     public void aktualizuj() {
         int roznicaX = 0, roznicaY = 0;
+        int doWykorzystania = (int)Math.round(this.kontroler.predkoscRuchu);
 
-        if(this.kontroler.czyProsiWDol()) {
-            roznicaY += 1;
-        } else {
-            if(this.kontroler.czyProsiWLewo()) {
-                roznicaX -= 1;
+        while(doWykorzystania > 0) {
+            if(this.kontroler.czyProsiWDol()) {
+                if(doWykorzystania >= 5 && this.pozycja.getY()+this.rozmiar.getWysokosc()+10 <= Stale.wysokoscEkranu) {
+                    roznicaY += 10;
+                    doWykorzystania = 0;
+                } else if(this.pozycja.getY()+this.rozmiar.getWysokosc()+(doWykorzystania*2) <= Stale.wysokoscEkranu) {
+                    roznicaY += doWykorzystania*2;
+                    doWykorzystania = 0;
+                }
             }
+
+            if(this.kontroler.czyProsiWLewo()) {
+                if(this.pozycja.getX()-doWykorzystania >= 0) {
+                    roznicaX -= doWykorzystania;
+                    doWykorzystania = 0;
+                } else {
+                    roznicaX -= this.pozycja.getX();
+                    doWykorzystania -= this.pozycja.getX();
+                    break;
+                }
+            }
+
             if(this.kontroler.czyProsiWPrawo()) {
-                roznicaX += 1;
+                if(this.pozycja.getX()+this.rozmiar.getSzerokosc()+doWykorzystania <= Stale.szerokoscEkranu) {
+                    roznicaX += doWykorzystania;
+                    doWykorzystania = 0;
+                } else {
+                    roznicaX += Stale.szerokoscEkranu-(this.pozycja.getX()+this.rozmiar.getSzerokosc());
+                    doWykorzystania -= Stale.szerokoscEkranu-(this.pozycja.getX()+this.rozmiar.getSzerokosc());
+                    break;
+                }
             }
         }
 
         if(this.kontroler.czyStrzela() && Math.random() > 0.99) {
             this.nowyPocisk = new Pocisk(this.pozycja.getX()+(this.rozmiar.getSzerokosc()/2)-(Stale.szerokoscPocisku/2), this.pozycja.getY()-Stale.wysokoscPocisku, true);
-            this.kontroler.zmienPozwolenieNaStrzal();;
+            this.kontroler.zmienPozwolenieNaStrzal();
         }
 
-        if(this.pozycja.getX() >= 0 && this.pozycja.getX()+this.rozmiar.getSzerokosc() <= Stale.szerokoscEkranu) {
-            this.pozycja = new Pozycja(this.pozycja.getX()+roznicaX, this.pozycja.getY());
-        }
-
-        if(this.pozycja.getY()+this.rozmiar.getWysokosc() <= Stale.wysokoscEkranu) {
-            this.pozycja = new Pozycja(this.pozycja.getX(), this.pozycja.getY()+roznicaY);
-        }
+        this.pozycja = new Pozycja(this.pozycja.getX()+roznicaX, this.pozycja.getY()+roznicaY);
     }
 
     @Override
@@ -92,5 +115,9 @@ public class Wrog extends Obiekt {
 
     public boolean czyJestPierwszy() {
         return this.pierwszy;
+    }
+
+    public void informujOZgonie() {
+        this.kontroler.predkoscRuchu += 0.05;
     }
 }
